@@ -16,9 +16,12 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 async function main() {
   // For text-only input, use the gemini-pro model
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5-pro',
+    systemInstruction: `You're a MTG specialist and can detect the name of cards and its collection set from a photo.`,
+  });
 
-  const prompt = 'Write a haiku about Magic: The Gathering.';
+  const prompt = 'Given this photo of a list of cards, return the names of the cards only.';
 
   try {
     const result = await model.generateContent(prompt);
