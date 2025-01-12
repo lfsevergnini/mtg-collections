@@ -1,4 +1,8 @@
+import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Access your API key from environment variables
 const apiKey = process.env.GEMINI_API_KEY;
@@ -26,4 +30,4 @@ async function main() {
   }
 }
 
-main(); 
+main();
