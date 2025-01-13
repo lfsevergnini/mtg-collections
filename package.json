@@ -1,10 +1,12 @@
 {
   "name": "mtg-collections",
   "packageManager": "yarn@4.5.1",
+  "bin": {
+    "parse-collection": "./dist/cli/parse-collection.js"
+  },
   "scripts": {
-    "start": "ts-node src/example.ts",
-    "dev": "ts-node-dev --respawn src/example.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "parse-collection": "ts-node src/cli/parse-collection.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
