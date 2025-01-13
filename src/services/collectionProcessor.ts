@@ -42,21 +42,29 @@ export class CollectionProcessor {
   }
 
   private generateLanguageFiles(cards: Card[], outputPath: string, timestamp: string): void {
-    // Group cards by language
-    const cardsByLanguage: Record<string, Set<string>> = {
-      en: new Set<string>(),
-      pt: new Set<string>()
+    // Group cards by language and count occurrences
+    const cardsByLanguage: Record<string, Map<string, number>> = {
+      en: new Map<string, number>(),
+      pt: new Map<string, number>()
     };
 
+    // Count occurrences of each card
     cards.forEach(card => {
-      cardsByLanguage[card.language].add(card.name);
+      const currentCount = cardsByLanguage[card.language].get(card.name) || 0;
+      cardsByLanguage[card.language].set(card.name, currentCount + 1);
     });
 
     // Generate files for each language
-    Object.entries(cardsByLanguage).forEach(([language, cardNames]) => {
+    Object.entries(cardsByLanguage).forEach(([language, cardCounts]) => {
       const fileName = `cards_${language}_${timestamp}.txt`;
       const fullPath = path.join(outputPath, fileName);
-      const content = Array.from(cardNames).sort().join('\n');
+
+      // Convert to array, sort by name, and format with quantities
+      const content = Array.from(cardCounts.entries())
+        .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+        .map(([name, count]) => `${count}x ${name}`)
+        .join('\n');
+
       fs.writeFileSync(fullPath, content);
       console.log(`${language.toUpperCase()} cards list saved to ${fullPath}`);
     });
