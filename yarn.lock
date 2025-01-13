@@ -887,6 +887,8 @@ __metadata:
     ts-node: "npm:^10.9.2"
     ts-node-dev: "npm:^2.0.0"
     typescript: "npm:^5.7.3"
+  bin:
+    parse-collection: ./dist/cli/parse-collection.js
   languageName: unknown
   linkType: soft
 
