@@ -3,6 +3,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import * as readline from 'readline';
+import * as path from 'path';
 
 interface ScryfallCard {
   name: string;
@@ -43,20 +44,43 @@ async function processFile(filePath: string) {
     crlfDelay: Infinity
   });
 
+  // Create output file path by adding _en before the extension
+  const parsedPath = path.parse(filePath);
+  const outputPath = path.join(
+    parsedPath.dir,
+    `${parsedPath.name}_en${parsedPath.ext}`
+  );
+
+  const translatedLines: string[] = [];
+  console.log('Translating cards...');
+
   for await (const line of rl) {
-    if (!line.trim()) continue;
+    if (!line.trim()) {
+      translatedLines.push('');
+      continue;
+    }
     
     // Extract quantity and card name
     const match = line.match(/^(\d+x\s*)?(.+)$/);
-    if (!match) continue;
+    if (!match) {
+      translatedLines.push(line);
+      continue;
+    }
 
     const [, quantity = '', cardName] = match;
     const englishName = await translateCard(cardName.trim());
-    console.log(`${quantity}${cardName} -> ${quantity}${englishName}`);
+    const translatedLine = `${quantity}${englishName}`;
+    
+    translatedLines.push(translatedLine);
+    console.log(`${quantity}${cardName} -> ${translatedLine}`);
 
     // Add a small delay to respect Scryfall's rate limits
     await new Promise(resolve => setTimeout(resolve, 100));
   }
+
+  // Write the translated lines to the output file
+  fs.writeFileSync(outputPath, translatedLines.join('\n'));
+  console.log(`\nTranslated card list saved to: ${outputPath}`);
 }
 
 async function main() {
@@ -79,7 +103,7 @@ async function main() {
       for (const cardName of args) {
         const englishName = await translateCard(cardName);
         console.log(`${cardName} -> ${englishName}`);
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 50));
       }
     }
   } catch (error) {
