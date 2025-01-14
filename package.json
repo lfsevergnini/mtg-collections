@@ -2,15 +2,18 @@
   "name": "mtg-collections",
   "packageManager": "yarn@4.5.1",
   "bin": {
-    "parse-collection": "./dist/cli/parse-collection.js"
+    "parse-collection": "./dist/cli/parse-collection.js",
+    "translate-cards": "./dist/cli/translate-cards.js"
   },
   "scripts": {
     "build": "tsc",
-    "parse-collection": "ts-node src/cli/parse-collection.ts"
+    "parse-collection": "ts-node src/cli/parse-collection.ts",
+    "translate-cards": "ts-node src/cli/translate-cards.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@types/node": "^22.10.5",
+    "axios": "^1.6.7",
     "dotenv": "^16.4.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
